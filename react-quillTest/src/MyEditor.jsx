@@ -8,6 +8,18 @@ function MyEditor() {
 
   const imageHandler = () => {
     console.log("이미지 핸들러 작동");
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      console.log(formData.get('image'));
+    }
   }
 
   const modules = useMemo(() => {
