@@ -6,7 +6,6 @@ import { editorTest } from './apis/test';
 function MyEditor() {
   const [content, setContent] = useState('');
   const quillRef = useRef();
-  const [test, setTest] = useState(true);
 
 
   const imageHandler = () => {
@@ -21,10 +20,11 @@ function MyEditor() {
       const formData = new FormData();
       formData.append('image', file);
 
-      let imgUrl = "<img src='../public/tempImg/" + file.name + "'/>"
-      console.log(imgUrl);
+      // let imgUrl = "<img src='../public/tempImg/" + file.name + "'/>"
+      let imgTag = `<img src="../public/tempImg/${file.name}" alt="${file.name}"/>`;
+      console.log(imgTag);
       
-      setContent(imgUrl);
+      setContent(prevContent => prevContent + imgTag);
 
       editorTest(formData);
     }
@@ -49,10 +49,6 @@ function MyEditor() {
     }
   }, [])
 
-  const onClickTest = ()=>{
-    setTest(test? false : true);
-    console.log(test);
-  }
 
   const formats = [
     'header', 'font', 'size',
@@ -67,8 +63,6 @@ function MyEditor() {
   };
 
   return (
-    <>
-    <img src="../public/tempImg/images.jpg" alt="test1" />
       <ReactQuill
         theme="snow"
         modules={modules}
@@ -77,8 +71,6 @@ function MyEditor() {
         onChange={handleChange}
         ref={quillRef}
       />
-      <button onClick={()=>onClickTest()}>버튼이다</button>
-    </>
   );
 }
 
