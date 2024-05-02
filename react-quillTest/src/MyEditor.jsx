@@ -7,11 +7,8 @@ function MyEditor() {
   const [content, setContent] = useState('');
   const quillRef = useRef();
   const [imgList, setImgList] = useState([]);
-  const [imgDeleteList, setImgDeleteList] = useState([]);
-  const [imgMoveList, setImgMoveList] = useState([]);
 
   const imageHandler = () => {
-    console.log("이미지 핸들러 작동");
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -65,25 +62,28 @@ function MyEditor() {
 
   const handleChange = (content) => {
     setContent(content);
+    console.log(content);
   };
 
   const insert = () => {
-    console.log(content);
-    console.log(imgList);
+    let moveList = [];
+    let deleteList = [];
+
     imgList.forEach((item) => {
       if(content.indexOf(item) !== -1) {
-        console.log(item + "있음");
-        // setImgMoveList(imgMoveList => [...imgMoveList, item]);
-        imgMove(item);
+        moveList.push(item);
       } else {
-        console.log(item + "없음");
-        // setImgDeleteList(imgDeleteList => [...imgDeleteList, item]);
-        imgDelete(item);
+        deleteList.push(item);
       }
     })
 
-    // console.log(imgDeleteList);
-    // console.log(imgMoveList);
+    if (moveList !== "") {
+      imgMove(moveList);
+    }
+    if (deleteList !== "") {
+      imgDelete(deleteList);
+    }
+
   }
 
   return (
