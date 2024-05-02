@@ -8,7 +8,7 @@ export const imgAPI = axios.create({
     withCredentials: true,
 });
 
-export const jsonAPI = axios.create({
+export const API = axios.create({
     baseURL: "/api",
     headers: {
         "Content-Type": "application/json",

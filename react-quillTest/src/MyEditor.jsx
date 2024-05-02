@@ -1,16 +1,17 @@
 import React, { useMemo, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { editorTest } from './apis/test';
+import { editorTest, imgDelete, imgMove } from './apis/test';
 
 function MyEditor() {
   const [content, setContent] = useState('');
   const quillRef = useRef();
-
+  const [imgList, setImgList] = useState([]);
+  const [imgDeleteList, setImgDeleteList] = useState([]);
+  const [imgMoveList, setImgMoveList] = useState([]);
 
   const imageHandler = () => {
     console.log("이미지 핸들러 작동");
-    console.log(content);
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -20,15 +21,20 @@ function MyEditor() {
       const formData = new FormData();
       formData.append('image', file);
 
+      const result = await editorTest(formData);
+
       // let imgUrl = "<img src='../public/tempImg/" + file.name + "'/>"
-      let imgTag = `<img src="../public/tempImg/${file.name}" alt="${file.name}"/>`;
-      console.log(imgTag);
+      let imgTag = `<img src="../public/tempImg/${result}" alt="${result}"/>`;
       
       setContent(prevContent => prevContent + imgTag);
 
-      editorTest(formData);
+      // const newList = [...imgList];
+      // newList.push(result);
+      setImgList(imgList => [...imgList, result]);
     }
   }
+
+
 
   const modules = useMemo(() => {
     return {
@@ -59,10 +65,29 @@ function MyEditor() {
 
   const handleChange = (content) => {
     setContent(content);
-    console.log(content);
   };
 
+  const insert = () => {
+    console.log(content);
+    console.log(imgList);
+    imgList.forEach((item) => {
+      if(content.indexOf(item) !== -1) {
+        console.log(item + "있음");
+        // setImgMoveList(imgMoveList => [...imgMoveList, item]);
+        imgMove(item);
+      } else {
+        console.log(item + "없음");
+        // setImgDeleteList(imgDeleteList => [...imgDeleteList, item]);
+        imgDelete(item);
+      }
+    })
+
+    // console.log(imgDeleteList);
+    // console.log(imgMoveList);
+  }
+
   return (
+    <>
       <ReactQuill
         theme="snow"
         modules={modules}
@@ -71,6 +96,8 @@ function MyEditor() {
         onChange={handleChange}
         ref={quillRef}
       />
+      <button onClick={insert}>작성</button>
+    </>
   );
 }
 
